@@ -10,6 +10,7 @@
     "apollo-link-context": "^1.0.20",
     "graphql": "^15.5.0",
     "graphql-tag": "^2.11.0",
+    "http-proxy-middleware": "^2.0.1",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
     "react": "^17.0.2",
@@ -44,6 +45,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "https://agile-temple-98505.herokuapp.com/"
+  }
 }

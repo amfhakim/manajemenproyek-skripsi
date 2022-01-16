@@ -1,36 +1,39 @@
 import React, { useState, useContext } from "react";
-import gql from "graphql-tag";
-import { useMutation } from "@apollo/client";
-
+import { useMutation, useQuery } from "@apollo/client";
 import { Container, Form, FormField, Button } from "semantic-ui-react";
 import { useForm } from "../../utils/hooks";
 import { AuthContext } from "../../context/auth";
+import {
+  FETCH_CUSTOMER_QUERY,
+  UPDATE_CUSTOMER_MUTATION,
+} from "../../queries/customers_query";
 import MenuBar from "../../components/MenuBar";
-import { FETCH_WORKERS_QUERY } from "../../queries/workers_query";
 
-function AddWorker(props) {
-  //const context = useContext(AuthContext);
+function UpdateCustomer(props) {
+  const context = useContext(AuthContext);
   const [errors, setErrors] = useState({});
+  const customerId = props.match.params.customerId;
 
-  const { values, onChange, onSubmit } = useForm(addWorkerCallback, {
+  const { values, onChange, onSubmit } = useForm(updateCustomerCallback, {
+    customerId: customerId,
     nama: "",
     alamat: "",
     notlp: "",
     email: "",
   });
 
-  const [addWorker, { loading }] = useMutation(CREATE_WORKER_MUTATION, {
+  const [updateCustomer, { loading }] = useMutation(UPDATE_CUSTOMER_MUTATION, {
     update(proxy, result) {
       const data = proxy.readQuery({
-        query: FETCH_WORKERS_QUERY,
+        query: FETCH_CUSTOMER_QUERY,
       });
       proxy.writeQuery({
-        query: FETCH_WORKERS_QUERY,
+        query: FETCH_CUSTOMER_QUERY,
         data: {
-          getWorkers: [result.data.createWorker, ...data.getWorkers],
+          getCustomer: [result.data.updateCustomer, ...data.getCustomer],
         },
       });
-      props.history.push("/workers");
+      props.history.push(`/customers/${customerId}`);
     },
     onError(err) {
       setErrors(
@@ -42,9 +45,18 @@ function AddWorker(props) {
     variables: values,
   });
 
-  function addWorkerCallback() {
-    addWorker();
+  function updateCustomerCallback() {
+    updateCustomer();
   }
+
+  let getCustomer = "";
+  const { data } = useQuery(FETCH_CUSTOMER_QUERY, {
+    variables: { customerId },
+  });
+  if (data) {
+    getCustomer = data.getCustomer;
+  }
+  const { nama, email, notlp, alamat, createdAt } = getCustomer;
 
   return (
     <Container>
@@ -56,38 +68,39 @@ function AddWorker(props) {
             noValidate
             className={loading ? "loading" : ""}
           >
-            <h2> Add a worker: </h2>
+            <h2> Update Customer </h2>
             <FormField>
               <Form.Input
                 label="Nama"
                 placeholder="nama"
                 name="nama"
+                type="text"
+                defaultValue={nama}
                 onChange={onChange}
-                value={values.nama}
                 error={errors.nama ? true : false}
               />
               <Form.Input
                 label="Alamat"
                 placeholder="alamat"
                 name="alamat"
+                defaultValue={alamat}
                 onChange={onChange}
-                value={values.alamat}
                 error={errors.alamat ? true : false}
               />
               <Form.Input
                 label="No Telepon"
                 placeholder="no tlp"
                 name="notlp"
+                defaultValue={notlp}
                 onChange={onChange}
-                value={values.notlp}
                 error={errors.notlp ? true : false}
               />
               <Form.Input
                 label="Email"
                 placeholder="email"
                 name="email"
+                defaultValue={email}
                 onChange={onChange}
-                value={values.email}
                 error={errors.email ? true : false}
               />
               <Button type="submit" color="teal">
@@ -110,23 +123,4 @@ function AddWorker(props) {
   );
 }
 
-const CREATE_WORKER_MUTATION = gql`
-  mutation createWorker(
-    $nama: String!
-    $alamat: String!
-    $notlp: String!
-    $email: String!
-  ) {
-    createWorker(
-      input: { nama: $nama, alamat: $alamat, notlp: $notlp, email: $email }
-    ) {
-      id
-      nama
-      alamat
-      notlp
-      email
-    }
-  }
-`;
-
-export default AddWorker;
+export default UpdateCustomer;

@@ -1,5 +1,7 @@
-import React, { useContext, useRef, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import React, { useContext } from "react";
+import { useQuery } from "@apollo/client";
+import { Link } from "react-router-dom";
+import moment from "moment";
 import {
   Button,
   Card,
@@ -9,8 +11,6 @@ import {
   Container,
   Progress,
   Table,
-  TableHeaderCell,
-  Tab,
 } from "semantic-ui-react";
 import { AuthContext } from "../../context/auth";
 import DeleteButton from "../../components/DeleteButton";
@@ -20,14 +20,26 @@ import { FETCH_PROJECT_QUERY } from "../../queries/projects_query";
 function SingleProject(props) {
   const projectId = props.match.params.projectId;
   const { user } = useContext(AuthContext);
-  let getProject = "";
 
+  let getProject = "";
   const { data } = useQuery(FETCH_PROJECT_QUERY, {
     variables: { projectId },
   });
   if (data) {
     getProject = data.getProject;
   }
+  const {
+    nama,
+    customer,
+    alamat,
+    startAt,
+    endAt,
+    progres,
+    tasks,
+    workers,
+    username,
+    createdAt,
+  } = getProject;
 
   function deleteProjectCallback() {
     props.history.push("/projects");
@@ -39,38 +51,47 @@ function SingleProject(props) {
   } / ${current.getFullYear()}`;
 
   let workersTable;
-  if (!getProject.workers || getProject.workers.length == 0) {
-    workersTable = <Button>Tambah Pekerja</Button>;
+  if (!workers || workers.length == 0) {
+    workersTable = (
+      <Card.Content textAlign="center">
+        <Button>Tambah Pekerja</Button>
+      </Card.Content>
+    );
   } else {
     workersTable = (
-      <Table>
-        <Table.Header>
-          <Table.HeaderCell>Nama</Table.HeaderCell>
-          <Table.HeaderCell>
-            Kehadiran hari ini:&emsp;&emsp;{currentDate}
-          </Table.HeaderCell>
-        </Table.Header>
-        <Table.Body>
-          {getProject.workers.map((w) => (
-            <Table.Row>
-              <Table.Cell>{w.nama}</Table.Cell>
-              <Table.Cell>tidak masuk</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      <Card.Content textAlign="center">
+        <Table>
+          <Table.Header>
+            <Table.HeaderCell>Nama</Table.HeaderCell>
+            <Table.HeaderCell>
+              Kehadiran hari ini:&emsp;&emsp;{currentDate}
+            </Table.HeaderCell>
+          </Table.Header>
+          <Table.Body>
+            {workers.map((w) => (
+              <Table.Row>
+                <Table.Cell>{w.nama}</Table.Cell>
+                <Table.Cell>tidak masuk</Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+        <a href="">edit daftar pekerja</a>
+      </Card.Content>
     );
   }
 
   let tasksCards;
-  if (!getProject.tasks || getProject.tasks.length == 0) {
+  if (!tasks || tasks.length == 0) {
     tasksCards = (
       <Card fluid>
         <Card.Content>
           <Card.Header textAlign="center">Daftar Pekerjaan</Card.Header>
         </Card.Content>
         <Card.Content textAlign="center">
-          <Button>Tambah Pekerjaan</Button>
+          <Button as={Link} to={`/projects/${projectId}/addtask`}>
+            Tambah Pekerjaan
+          </Button>
         </Card.Content>
       </Card>
     );
@@ -81,68 +102,37 @@ function SingleProject(props) {
           <Card.Header textAlign="center">Daftar Pekerjaan</Card.Header>
         </Card.Content>
         <Card.Content>
-          {getProject.tasks.map((t) => (
-            <Card fluid color="grey">
-              <Card.Header style={{ padding: "1em" }}>
-                <h3 style={{ marginLeft: "1em" }}>{t.nama}</h3>
-              </Card.Header>
-              <Card.Content>
-                <Grid>
-                  <Grid.Row>
-                    <Table>
-                      <Table.Body>
-                        <Table.Row>
-                          <Table.Cell>Tanggal Mulai: {t.startAt}</Table.Cell>
-                          <Table.Cell>Tanggal Selesai: {t.endAt}</Table.Cell>
-                          <Table.Cell>Status: {t.status}</Table.Cell>
-                        </Table.Row>
-                      </Table.Body>
-                    </Table>
-                  </Grid.Row>
-
-                  <Grid.Row columns="2">
-                    <Grid.Column>
-                      <Card fluid>
-                        <Card.Header>Tools</Card.Header>
-                        <Card.Content>
-                          <Table>
-                            <Table.Header>
-                              <Table.HeaderCell>Nama</Table.HeaderCell>
-                              <Table.HeaderCell>Jumlah</Table.HeaderCell>
-                              <Table.HeaderCell>Status</Table.HeaderCell>
-                            </Table.Header>
-                            <Table.Body>
-                              {t.tools.map((tool) => {
-                                <Table.Row>
-                                  <Table.Cell>{tool.nama}</Table.Cell>
-                                  <Table.Cell>{tool.jumlah}</Table.Cell>
-                                  <Table.Cell>{tool.status}</Table.Cell>
-                                </Table.Row>;
-                              })}
-                            </Table.Body>
-                          </Table>
-                        </Card.Content>
-                      </Card>
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Card fluid>
-                        <Card.Header>Materials</Card.Header>
-                        <Card.Content>
-                          <Table>
-                            <Table.Header>
-                              <Table.HeaderCell>Nama</Table.HeaderCell>
-                              <Table.HeaderCell>Jumlah</Table.HeaderCell>
-                              <Table.HeaderCell>Status</Table.HeaderCell>
-                            </Table.Header>
-                          </Table>
-                        </Card.Content>
-                      </Card>
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-              </Card.Content>
-            </Card>
-          ))}
+          <Table>
+            <Table.Header>
+              <Table.HeaderCell>Nama Pekerjaan</Table.HeaderCell>
+              <Table.HeaderCell>Tanggal Mulai</Table.HeaderCell>
+              <Table.HeaderCell>Tanggal Selesai</Table.HeaderCell>
+              <Table.HeaderCell>Status</Table.HeaderCell>
+            </Table.Header>
+            <Table.Body>
+              {tasks.map((t) => (
+                <Table.Row>
+                  <Table.Cell>
+                    <a href={`/projects/${projectId}/${t.id}`}>{t.nama}</a>
+                  </Table.Cell>
+                  <Table.Cell>{t.startAt}</Table.Cell>
+                  <Table.Cell>{t.endAt}</Table.Cell>
+                  <Table.Cell>
+                    {t.status ? (
+                      <p style={{ color: "#008000" }}>sudah</p>
+                    ) : (
+                      <p style={{ color: "#ff0000" }}>belum</p>
+                    )}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </Card.Content>
+        <Card.Content textAlign="center">
+          <Button as={Link} to={`/projects/${projectId}/addtask`}>
+            Tambah Pekerjaan
+          </Button>
         </Card.Content>
       </Card>
     );
@@ -152,20 +142,6 @@ function SingleProject(props) {
   if (!getProject) {
     projectMarkup = <p>loading project ...</p>;
   } else {
-    const {
-      id,
-      nama,
-      namaCustomer,
-      alamat,
-      budget,
-      startAt,
-      endAt,
-      progres,
-      tasks,
-      username,
-      createdAt,
-    } = getProject;
-
     projectMarkup = (
       <Container>
         <MenuBar />
@@ -188,7 +164,7 @@ function SingleProject(props) {
                           <Table.Cell>
                             <b>Nama Customer</b>
                           </Table.Cell>
-                          <Table.Cell>{namaCustomer}</Table.Cell>
+                          <Table.Cell>{customer.nama}</Table.Cell>
                         </Table.Row>
                         <Table.Row>
                           <Table.Cell>
@@ -208,6 +184,18 @@ function SingleProject(props) {
                           </Table.Cell>
                           <Table.Cell>{endAt}</Table.Cell>
                         </Table.Row>
+                        <Table.Row>
+                          <Table.Cell>
+                            <b>Tanggal Terdaftar </b>
+                          </Table.Cell>
+                          <Table.Cell>{createdAt.slice(0, 10)}</Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                          <Table.Cell>
+                            <b>Pendaftar</b>
+                          </Table.Cell>
+                          <Table.Cell>{username}</Table.Cell>
+                        </Table.Row>
                       </Table.Body>
                     </Table>
                     <a href="">edit informasi umum</a>
@@ -220,10 +208,7 @@ function SingleProject(props) {
                   <Card.Content textAlign="center">
                     <Card.Header>Daftar Pekerja</Card.Header>
                   </Card.Content>
-                  <Card.Content textAlign="center">
-                    {workersTable}
-                    <a href="">edit daftar pekerja</a>
-                  </Card.Content>
+                  {workersTable}
                 </Card>
               </Grid.Column>
             </Grid.Row>
@@ -235,7 +220,7 @@ function SingleProject(props) {
                 </Card.Content>
                 <Card.Content>
                   <Progress percent={progres * 100} indicating>
-                    <h5>{progres * 100}%</h5>
+                    <h5>{(progres * 100).toFixed(2)}%</h5>
                   </Progress>
                 </Card.Content>
               </Card>

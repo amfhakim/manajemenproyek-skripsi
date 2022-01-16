@@ -73,3 +73,43 @@ export const FETCH_PROJECT_QUERY = gql`
     }
   }
 `;
+
+export const CREATE_PROJECT_MUTATION = gql`
+  mutation createProject(
+    $nama: String!
+    $alamat: String!
+    $namaCustomer: String!
+    $startAt: String
+    $endAt: String
+    $namaWorkers: [String]
+  ) {
+    createProject(
+      input: {
+        nama: $nama
+        alamat: $alamat
+        namaCustomer: $namaCustomer
+        startAt: $startAt
+        endAt: $endAt
+        namaWorkers: $namaWorkers
+      }
+    ) {
+      id
+      nama
+      namaCustomer
+      customer {
+        id
+        nama
+      }
+      alamat
+      startAt
+      endAt
+      namaWorkers
+      workers {
+        id
+        nama
+      }
+      createdAt
+      username
+    }
+  }
+`;

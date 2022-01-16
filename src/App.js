@@ -19,6 +19,11 @@ import Workers from "./pages/workers/Workers";
 import AddWorker from "./pages/workers/AddWorker";
 import SingleWorker from "./pages/workers/SingleWorker";
 import SingleProject from "./pages/projects/SingleProject";
+import AddProject from "./pages/projects/AddProject";
+import UpdateCustomer from "./pages/customers/UpdateCustomer";
+import UpdateWorker from "./pages/workers/UpdateWorker";
+import AddTask from "./pages/tasks/AddTask";
+import SingleTask from "./pages/tasks/SingleTask";
 
 function App() {
   return (
@@ -44,6 +49,27 @@ function App() {
           />
           <Route exact path="/customers/addcustomer" component={AddCustomer} />
           <Route exact path="/workers/addworker" component={AddWorker} />
+          <Route exact path="/projects/addproject" component={AddProject} />
+          <Route
+            exact
+            path="/customers/:customerId/update"
+            component={UpdateCustomer}
+          />
+          <Route
+            exact
+            path="/workers/:workerId/update"
+            component={UpdateWorker}
+          />
+          <Route
+            exact
+            path="/projects/:projectId/addtask"
+            component={AddTask}
+          />
+          <Route
+            exact
+            path="/projects/:projectId/:taskId"
+            component={SingleTask}
+          />
         </Container>
       </Router>
     </AuthProvider>

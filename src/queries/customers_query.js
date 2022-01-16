@@ -23,6 +23,13 @@ export const FETCH_CUSTOMER_QUERY = gql`
       alamat
       createdAt
       username
+      projects {
+        id
+        nama
+        startAt
+        endAt
+        progres
+      }
     }
   }
 `;
@@ -35,6 +42,29 @@ export const CREATE_CUSTOMER_MUTATION = gql`
     $email: String!
   ) {
     createCustomer(
+      input: { nama: $nama, alamat: $alamat, notlp: $notlp, email: $email }
+    ) {
+      id
+      nama
+      alamat
+      notlp
+      email
+      createdAt
+      username
+    }
+  }
+`;
+
+export const UPDATE_CUSTOMER_MUTATION = gql`
+  mutation updateCustomer(
+    $customerId: ID!
+    $nama: String!
+    $alamat: String!
+    $notlp: String!
+    $email: String!
+  ) {
+    updateCustomer(
+      customerId: $customerId
       input: { nama: $nama, alamat: $alamat, notlp: $notlp, email: $email }
     ) {
       id

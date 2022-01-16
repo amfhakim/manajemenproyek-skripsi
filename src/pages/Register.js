@@ -34,7 +34,7 @@ function Register(props) {
     onError(err) {
       setErrors(
         err && err.graphQLErrors[0]
-          ? err.graphQLErrors[0].extensions.exception.errors
+          ? err.graphQLErrors[0].extensions.errors
           : {}
       );
     },

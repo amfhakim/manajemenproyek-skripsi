@@ -14,17 +14,26 @@ import moment from "moment";
 import MenuBar from "../../components/MenuBar";
 import DeleteManagerButton from "../../components/managers/DeleteManager";
 import { FETCH_MANAGER_QUERY } from "../../queries/managers_query";
+import { FETCH_USER_QUERY } from "../../queries/users_query";
 import { Link } from "react-router-dom";
 
-function SingleManager(props) {
-  const managerId = props.match.params.managerId;
-  let getManager = "";
-
-  const { data } = useQuery(FETCH_MANAGER_QUERY, {
-    variables: { managerId },
+function Profile(props) {
+  const userId = props.match.params.userId;
+  let getUser = "";
+  const { data } = useQuery(FETCH_USER_QUERY, {
+    variables: { userId },
   });
   if (data) {
-    getManager = data.getManager;
+    getUser = data.getUser;
+  }
+  const { managerId } = getUser;
+
+  let getManager = "";
+  const dataManager = useQuery(FETCH_MANAGER_QUERY, {
+    variables: { managerId },
+  }).data;
+  if (dataManager) {
+    getManager = dataManager.getManager;
   }
   const { nama, email, notlp, alamat, createdAt, projects } = getManager;
 
@@ -142,4 +151,4 @@ function SingleManager(props) {
   return managerMarkup;
 }
 
-export default SingleManager;
+export default Profile;

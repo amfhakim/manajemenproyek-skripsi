@@ -25,6 +25,9 @@ import UpdateWorker from "./pages/workers/UpdateWorker";
 import AddTask from "./pages/tasks/AddTask";
 import SingleTask from "./pages/tasks/SingleTask";
 import UpdateTask from "./pages/tasks/UpdateTask";
+import Managers from "./pages/managers/Managers";
+import SingleManager from "./pages/managers/SingleManager";
+import Profile from "./pages/managers/Profile";
 
 function App() {
   return (
@@ -36,6 +39,7 @@ function App() {
           <Route exact path="/home" component={Projects} />
           <Route exact path="/projects" component={Projects} />
           <Route exact path="/customers" component={Customers} />
+          <Route exact path="/managers" component={Managers} />
           <Route exact path="/users" component={Users} />
           <Route exact path="/workers" component={Workers} />
           <Route exact path="/register" component={Register} />
@@ -48,6 +52,7 @@ function App() {
             path="/customers/:customerId"
             component={SingleCustomer}
           />
+          <Route exact path="/managers/:managerId" component={SingleManager} />
           <Route exact path="/customers/addcustomer" component={AddCustomer} />
           <Route exact path="/workers/addworker" component={AddWorker} />
           <Route exact path="/projects/addproject" component={AddProject} />
@@ -76,6 +81,7 @@ function App() {
             path="/projects/:projectId/:taskId/update"
             component={UpdateTask}
           />
+          <Route exact path="/profile/:userId" component={Profile} />
         </Container>
       </Router>
     </AuthProvider>

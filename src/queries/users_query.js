@@ -18,6 +18,11 @@ export const FETCH_USER_QUERY = gql`
       username
       email
       name
+      managerId
+      manager {
+        id
+        nama
+      }
       createdAt
     }
   }

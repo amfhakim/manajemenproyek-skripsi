@@ -18,6 +18,7 @@ function MenuBar() {
       <Menu fixed="top" inverted size="huge">
         <Menu.Item name="projects" active as={Link} to="/projects" />
         <Menu.Item name="customers" as={Link} to="/customers" />
+        <Menu.Item name="managers" as={Link} to="/managers" />
         <Menu.Item name="users" as={Link} to="/users" />
         <Menu.Item name="workers" as={Link} to="/workers" />
 
@@ -32,7 +33,11 @@ function MenuBar() {
           <Menu.Item name="home" active as={Link} to="/projects" />
 
           <Menu.Menu position="right">
-            <Menu.Item name={user.username} as={Link} to="/profile" />
+            <Menu.Item
+              name={user.username}
+              as={Link}
+              to={`/profile/${user.id}`}
+            />
             <Menu.Item name="logout" onClick={logout} />
           </Menu.Menu>
         </Menu>

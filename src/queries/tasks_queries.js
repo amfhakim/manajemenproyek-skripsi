@@ -26,8 +26,8 @@ export const CREATE_TASK_MUTATION = gql`
 `;
 
 export const FETCH_TASK_QUERY = gql`
-  query getTaskInProject($projectId: ID!) {
-    getTaskInProject(projectId: $projectId) {
+  query getTask($taskId: ID!) {
+    getTask(taskId: $taskId) {
       id
       nama
       startAt
@@ -45,6 +45,27 @@ export const FETCH_TASK_QUERY = gql`
         jumlah
         status
       }
+    }
+  }
+`;
+
+export const UPDATE_TASK_MUTATION = gql`
+  mutation updateTask(
+    $taskId: ID!
+    $nama: String!
+    $startAt: String!
+    $endAt: String!
+    $status: Boolean
+  ) {
+    updateTask(
+      taskId: $taskId
+      input: { nama: $nama, startAt: $startAt, endAt: $endAt, status: $status }
+    ) {
+      id
+      nama
+      startAt
+      endAt
+      status
     }
   }
 `;

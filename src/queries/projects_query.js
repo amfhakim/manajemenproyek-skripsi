@@ -55,18 +55,6 @@ export const FETCH_PROJECT_QUERY = gql`
         startAt
         endAt
         status
-        materials {
-          id
-          nama
-          jumlah
-          status
-        }
-        tools {
-          id
-          nama
-          jumlah
-          status
-        }
       }
       createdAt
       username

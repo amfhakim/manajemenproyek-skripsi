@@ -24,7 +24,7 @@ function SingleTask(props) {
     variables: { taskId },
   });
   if (data) {
-    getTask = data.getTaskInProject;
+    getTask = data.getTask;
   }
   const { nama, startAt, endAt, status, tools, materials } = getTask;
 
@@ -36,6 +36,7 @@ function SingleTask(props) {
     getProject = projectData.getProject;
   }
   const namaProyek = getProject.nama;
+  const customerProyek = getProject.namaCustomer;
 
   function deleteTaskCallback() {
     props.history.push(`/projects/${projectId}`);
@@ -55,9 +56,19 @@ function SingleTask(props) {
         <Table.Body>
           {tools.map((t) => (
             <Table.Row>
-              <Table.Cell>{t.nama}</Table.Cell>
+              <Table.Cell>
+                <a href={`/projects/${projectId}/${taskId}/${t.id}`}>
+                  {t.nama}
+                </a>
+              </Table.Cell>
               <Table.Cell>{t.jumlah}</Table.Cell>
-              <Table.Cell>{t.status}</Table.Cell>
+              <Table.Cell>
+                {t.status ? (
+                  <p style={{ color: "#008000" }}>tersedia</p>
+                ) : (
+                  <p style={{ color: "#ff0000" }}>belum tersedia</p>
+                )}
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
@@ -79,9 +90,20 @@ function SingleTask(props) {
         <Table.Body>
           {materials.map((m) => (
             <Table.Row>
-              <Table.Cell>{m.nama}</Table.Cell>
+              <Table.Cell>
+                <a href={`/projects/${projectId}/${taskId}/${m.id}`}>
+                  {m.nama}
+                </a>
+              </Table.Cell>
               <Table.Cell>{m.jumlah}</Table.Cell>
-              <Table.Cell>{m.status}</Table.Cell>
+              <Table.Cell>
+                {m.status ? (
+                  <p style={{ color: "#008000" }}>tersedia</p>
+                ) : (
+                  <p style={{ color: "#ff0000" }}>belum tersedia</p>
+                )}
+                {m.status}
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
@@ -101,9 +123,6 @@ function SingleTask(props) {
             <Grid.Row className="page-title">
               <h1>Detail Pekerjaan</h1>
             </Grid.Row>
-            <Grid.Row className="page-title">
-              <h4>untuk proyek: {namaProyek}</h4>
-            </Grid.Row>
             <Grid.Row>
               <Grid.Column>
                 <Card fluid>
@@ -115,6 +134,20 @@ function SingleTask(props) {
                             <b>Nama Pekerjaan</b>
                           </Table.Cell>
                           <Table.Cell>{nama}</Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                          <Table.Cell>
+                            <b>Nama Proyek</b>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <a href={`/projects/${projectId}`}>{namaProyek}</a>
+                          </Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                          <Table.Cell>
+                            <b>Nama Customer</b>
+                          </Table.Cell>
+                          <Table.Cell>{customerProyek}</Table.Cell>
                         </Table.Row>
                         <Table.Row>
                           <Table.Cell>
@@ -132,20 +165,43 @@ function SingleTask(props) {
                           <Table.Cell>
                             <b>Status</b>
                           </Table.Cell>
-                          <Table.Cell>{status}</Table.Cell>
+                          <Table.Cell>
+                            {status ? (
+                              <p style={{ color: "#008000" }}>selesai</p>
+                            ) : (
+                              <p style={{ color: "#ff0000" }}>belum selesai</p>
+                            )}
+                          </Table.Cell>
                         </Table.Row>
                       </Table.Body>
                     </Table>
                   </Card.Content>
                   <hr />
                   <Card.Content>
-                    <h3>Daftar Peralatan</h3>
-                    {toolsTable}
-                  </Card.Content>
-                  <hr />
-                  <Card.Content>
-                    <h3>Daftar Material</h3>
-                    {materialsTable}
+                    <Grid>
+                      <Grid.Row columns="2" divided>
+                        <Grid.Column textAlign="center">
+                          <h3>Daftar Peralatan</h3>
+                          {toolsTable}
+                          <Button
+                            as={Link}
+                            to={`/projects/${projectId}/${taskId}/addtool`}
+                          >
+                            Tambah Peralatan
+                          </Button>
+                        </Grid.Column>
+                        <Grid.Column textAlign="center">
+                          <h3>Daftar Material</h3>
+                          {materialsTable}
+                          <Button
+                            as={Link}
+                            to={`/projects/${projectId}/${taskId}/addmaterial`}
+                          >
+                            Tambah Material
+                          </Button>
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
                   </Card.Content>
                   <hr />
                   <CardContent extra>

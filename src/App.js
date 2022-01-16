@@ -24,6 +24,7 @@ import UpdateCustomer from "./pages/customers/UpdateCustomer";
 import UpdateWorker from "./pages/workers/UpdateWorker";
 import AddTask from "./pages/tasks/AddTask";
 import SingleTask from "./pages/tasks/SingleTask";
+import UpdateTask from "./pages/tasks/UpdateTask";
 
 function App() {
   return (
@@ -69,6 +70,11 @@ function App() {
             exact
             path="/projects/:projectId/:taskId"
             component={SingleTask}
+          />
+          <Route
+            exact
+            path="/projects/:projectId/:taskId/update"
+            component={UpdateTask}
           />
         </Container>
       </Router>
